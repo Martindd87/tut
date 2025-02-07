@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artikel Zusammenfassen</title>
+    <style>
+        @font-face {
+            font-family: 'stern-variable';
+            src: url('../static/SternVariable-4OGB3BYX.woff2') format('woff2');
+            font-display: swap;
+            font-style: normal;
+            font-weight: 300 800;
+            font-stretch: 80% 100%;
+        }
+
+        body {
+            font-family: 'stern-variable', sans-serif;
+            margin: 20px;
+            background-color: white;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        textarea, input, button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'stern-variable', sans-serif;
+        }
+
+        button {
+            background-color: rgb(204, 4, 4);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: rgb(204, 54, 54);
+        }
+    </style>
+</head>
+<body>
+    <h1>Artikel Zusammenfassen</h1>
+    <div class="input-section">
+        <label for="articleText">Geben Sie den Artikeltext ein:</label>
+        <textarea id="articleText" rows="10" placeholder="Hier Ihren Artikel einfügen..."></textarea>
+        <button id="summarizeButton">Artikel zusammenfassen</button>
+    </div>
+
+    <script>
+        document.getElementById('summarizeButton').addEventListener('click', async () => {
+            const articleText = document.getElementById('articleText').value;
+            if (!articleText.trim()) {
+                alert('Bitte geben Sie einen Artikeltext ein.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/summarize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: articleText })
+                });
+
+                const data = await response.json();
+                alert(`Zusammenfassung: ${data.summary}`);
+            } catch (error) {
+                console.error('Fehler beim Zusammenfassen des Artikels:', error);
+                alert('Es ist ein Fehler aufgetreten.');
+            }
+        });
+    </script>
+</body>
+</html>
